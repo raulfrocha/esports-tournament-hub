@@ -1,0 +1,156 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  PLAYER
+  ADMIN
+}
+
+enum TournamentFormat {
+  ROUND_ROBIN
+  SINGLE_ELIMINATION
+  DOUBLE_ELIMINATION
+  GROUP_STAGE_ELIMINATION
+}
+
+enum TournamentStatus {
+  PENDING
+  IN_PROGRESS
+  ENDED
+}
+
+model User {
+  id             Int      @id @default(autoincrement())
+  name           String
+  password       String
+  username       String   @unique
+  email          String   @unique
+  createdAt      DateTime @default(now())
+  role           Role     @default(PLAYER)
+  favoriteGameId Int?
+  favoriteGame   Game?    @relation(fields: [favoriteGameId], references: [id])
+  teamId         Int?
+  team           Team?    @relation(fields: [teamId], references: [id])
+  captainedTeams Team[]  @relation("Captain")
+}
+
+model Game {
+  id          Int          @id @default(autoincrement())
+  name        String       @unique // Ex: "League of Legends", "Counter-Strike"
+  abbr        String       @unique // Ex: "LoL", "CS"
+  modeType    String // Ex: "5v5"
+  maps        GameMap[]
+  tournaments Tournament[]
+  users       User[]
+}
+
+model GameMap {
+  id      Int     @id @default(autoincrement())
+  name    String
+  gameId  Int
+  game    Game?   @relation(fields: [gameId], references: [id])
+  matches Match[]
+}
+
+model Team {
+  id             Int                 @id @default(autoincrement())
+  name           String              @unique
+  tag            String?
+  players        User[]
+  tournaments    TournamentOnTeams[]
+  matchesAsTeamA Match[]             @relation("TeamA")
+  matchesAsTeamB Match[]             @relation("TeamB")
+
+  captainId      Int
+  captain        User @relation("Captain", fields: [captainId], references: [id])
+
+  victories Match[] @relation("Winner")
+
+  tournamentsWon Tournament[]        @relation("TournamentChampion")
+}
+
+model Tournament {
+  id        Int                 @id @default(autoincrement())
+  name      String
+  startDate DateTime
+  endDate   DateTime
+  gameId    Int
+  game      Game                @relation(fields: [gameId], references: [id])
+  format    TournamentFormat
+  matches   Match[]
+  teams     TournamentOnTeams[]
+  maxTeams  Int
+  championId Int?
+  champion   Team? @relation(name: "TournamentChampion", fields: [championId], references: [id])
+  status    TournamentStatus @default(PENDING)
+}
+
+model TournamentOnTeams {
+  teamId       Int
+  team         Team       @relation(fields: [teamId], references: [id])
+  tournamentId Int
+  tournament   Tournament @relation(fields: [tournamentId], references: [id])
+  registeredAt DateTime   @default(now())
+
+  @@id([teamId, tournamentId])
+}
+
+model BracketPosition {
+  id           Int @id @default(autoincrement())
+  tournamentId Int
+
+  matchId Int
+  match   Match @relation("SlotTarget", fields: [matchId], references: [id])
+
+  slotType String
+
+  sourceMatchId Int
+  sourceMatch   Match @relation(name: "SourceMatch", fields: [sourceMatchId], references: [id])
+
+  sourceOutcome String
+
+  @@unique([matchId, slotType])
+  @@index([tournamentId])
+}
+
+model Match {
+  id           Int        @id @default(autoincrement())
+  tournamentId Int
+  tournament   Tournament @relation(fields: [tournamentId], references: [id])
+  mapId        Int
+  map          GameMap    @relation(fields: [mapId], references: [id])
+
+  teamAId Int?
+  teamA   Team? @relation("TeamA", fields: [teamAId], references: [id])
+
+  teamBId Int?
+  teamB   Team? @relation("TeamB", fields: [teamBId], references: [id])
+
+  winnerId Int?
+  winner   Team? @relation("Winner", fields: [winnerId], references: [id])
+
+  scoreA Int?
+  scoreB Int?
+
+  played Boolean @default(false)
+
+  round     Int
+  stage     String?
+  groupName String?
+  bracket   String?
+
+  targetOfSlots BracketPosition[] @relation("SlotTarget")
+  slotsToFill   BracketPosition[] @relation("SourceMatch")
+}
