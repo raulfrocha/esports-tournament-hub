@@ -8,6 +8,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   
+  console.log("-> 🚀 INICIANDO APLICAÇÃO NESTJS...");
   app.enableVersioning({
     type: VersioningType.URI,
   });
