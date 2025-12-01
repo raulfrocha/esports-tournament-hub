@@ -28,10 +28,10 @@ A API oferece funcionalidades completas de CRUD e regras de negócio avançadas,
 
 ## 🌐 Acesso à API
 - **URL Base:**  
-  ``
+  `https://esports-tournament-hub.onrender.com/v1`
 
 - **Swagger (Documentação Interativa):**  
-  ``
+  `https://esports-tournament-hub.onrender.com/v1/api/docs`
 
 ---
 
