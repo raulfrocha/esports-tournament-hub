@@ -18,9 +18,9 @@ import { RolesGuard } from './roles.guard';
       signOptions: { expiresIn: '60m' },
     }),
   ],
-  providers: [AuthService, JwtStrategy, PrismaService],
+  providers: [AuthService, JwtStrategy, PrismaService, JwtAuthGuard, OwnerGuard, RolesGuard],
   controllers: [AuthController],
-  exports: [AuthService, JwtModule, JwtAuthGuard, OwnerGuard, RolesGuard],
+  exports: [AuthService, JwtModule, PassportModule],
 })
 export class AuthModule implements NestModule {
 
