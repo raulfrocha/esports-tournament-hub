@@ -5,14 +5,14 @@
       "src": "src/main.ts",
       "use": "@vercel/node",
       "config": {
-        "includeFiles": ["dist/**"]
+        "includeFiles": ["dist/**"] 
       }
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/dist/src/main"
+      "dest": "/dist/src/main.js" 
     }
   ],
   "buildCommand": "npm run build"
