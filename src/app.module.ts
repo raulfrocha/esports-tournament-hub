@@ -38,7 +38,22 @@ import { RankingModule } from './ranking/ranking.module';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes('*');
+    consumer
+      .apply(AuthMiddleware)
+      .exclude(
+        { path: 'auth/login', method: RequestMethod.POST },
+        { path: 'auth/register', method: RequestMethod.POST },
+
+        { path: 'v1/games', method: RequestMethod.GET },
+        { path: 'v1/tournaments', method: RequestMethod.GET },
+        { path: 'v1/tournaments/:id', method: RequestMethod.GET },
+        { path: 'v1/users', method: RequestMethod.GET },
+        { path: 'v1/users/:id', method: RequestMethod.GET },
+
+        'api/docs', 
+        'api-json',
+      )
+      .forRoutes('*');
   }
 }
 // O AppModule é o módulo raiz da aplicação NestJS. Ele importa o SharedModule e o CoreModule, e também declara o AppController e o AppService como controladores e provedores, respectivamente. O AppModule serve como o ponto de entrada para a aplicação, organizando os diferentes módulos e serviços necessários para o funcionamento da aplicação.
