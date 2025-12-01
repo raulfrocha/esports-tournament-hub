@@ -21,6 +21,7 @@ import { RolesGuard } from 'src/auth/roles.guard';
 import { Roles } from 'src/auth/roles.decorator';
 import { Role } from '@prisma/client';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { Public } from 'src/auth/public.decorator';
 
 @ApiTags('Games')
 @ApiBearerAuth()
@@ -40,10 +41,10 @@ export class GamesController {
     return this.gamesService.create(createGameDto);
   }
 
+  @Public()
   @Get()
   @HttpCode(200)
-  @Roles(Role.ADMIN, Role.PLAYER)
-  @ApiOperation({ summary: 'Lista todos os jogos' })
+  @ApiOperation({ summary: 'Lista todos os jogos (rota pública)' })
   findAllGames() {
     return this.gamesService.findAll();
   }

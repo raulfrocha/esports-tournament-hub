@@ -20,15 +20,6 @@ import { RolesGuard } from './roles.guard';
   ],
   providers: [AuthService, JwtStrategy, PrismaService, JwtAuthGuard, OwnerGuard, RolesGuard],
   controllers: [AuthController],
-  exports: [AuthService, JwtModule, PassportModule],
+  exports: [AuthService, JwtModule, PassportModule, JwtAuthGuard, OwnerGuard, RolesGuard],
 })
-export class AuthModule implements NestModule {
-
-  configure(consumer: MiddlewareConsumer) {
-
-    consumer
-      .apply(AuthMiddleware)
-      .exclude('/auth/login', '/auth/register')
-      .forRoutes('*');
-  }
-}
+export class AuthModule {}

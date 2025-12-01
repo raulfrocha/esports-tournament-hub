@@ -18,6 +18,7 @@ import { QueryFilterDto } from './dto/query-filter.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { OwnerGuard } from 'src/auth/owner.guard';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+
 @ApiTags('Users')
 @ApiBearerAuth()
 @Controller({ path: 'users', version: '1' })

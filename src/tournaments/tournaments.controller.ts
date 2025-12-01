@@ -6,6 +6,7 @@ import { CreateTournamentDto } from './dto/create-tournaments.dto';
 import { TournamentsService } from './tournaments.service';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { Public } from 'src/auth/public.decorator';
 
 @ApiTags('Tournaments')
 @ApiBearerAuth()
@@ -31,10 +32,10 @@ export class TournamentsController {
     return this.tournamentsService.findOne(id);
   }
 
+  @Public()
   @Get()
   @HttpCode(200)
-  @Roles(Role.ADMIN, Role.PLAYER)
-  @ApiOperation({ summary: 'Lista todos os torneios' })
+  @ApiOperation({ summary: 'Lista todos os torneios (rota pública)' })
   findAll() {
     return this.tournamentsService.findAll();
   }
