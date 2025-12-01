@@ -6,6 +6,7 @@ import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt.strategy';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthMiddleware } from './auth.middleware';
+import { JwtAuthGuard } from './jwt-auth.guard';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { AuthMiddleware } from './auth.middleware';
   ],
   providers: [AuthService, JwtStrategy, PrismaService],
   controllers: [AuthController],
-  exports: [AuthService, JwtModule],
+  exports: [AuthService, JwtModule, JwtAuthGuard],
 })
 export class AuthModule implements NestModule {
 
