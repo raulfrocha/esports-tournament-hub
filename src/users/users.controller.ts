@@ -14,7 +14,6 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
-import { QueryFilterDto } from './dto/query-filter.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { OwnerGuard } from 'src/auth/owner.guard';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
@@ -35,8 +34,8 @@ export class UsersController {
   @Get()
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Lista todos os usuários (Requer autenticação)' })
-  findAllUsers(@Query() queryFilter: QueryFilterDto) {
-    return this.usersService.findAll(queryFilter.filter, queryFilter.page);
+  findAllUsers() {
+    return this.usersService.findAll();
   }
 
   @Get(':id')

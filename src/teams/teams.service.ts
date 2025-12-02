@@ -9,7 +9,7 @@ export class TeamsService {
 
   async create(data: TeamCreationData) {
     const { captainId, ...teamData } = data;
-    
+
     return this.prisma.team.create({
       data: {
         ...teamData,
@@ -21,22 +21,21 @@ export class TeamsService {
     });
   }
 
-  findAll(filter?: string, page: number = 1) {
-     return this.prisma.team.findMany({
+  findAll() {
+    return this.prisma.team.findMany({
       include: {
-        players: true
+        players: true,
       },
-      skip: (page - 1) * 5,
-      take: 5,
     });
   }
 
   findOne(id: number) {
-    return this.prisma.team.findUnique({ 
+    return this.prisma.team.findUnique({
       include: {
-              players: true,
-          },
-      where: { id } });
+        players: true,
+      },
+      where: { id },
+    });
   }
 
   update(id: number, data: Prisma.TeamUpdateInput) {

@@ -27,10 +27,8 @@ export class TournamentsService {
     return this.prisma.tournament.create({ data });
   }
 
-  findAll(page: number = 1) {
+  findAll() {
     return this.prisma.tournament.findMany({
-      skip: (page - 1) * 5,
-      take: 5,
       include: { teams: true },
     });
   }

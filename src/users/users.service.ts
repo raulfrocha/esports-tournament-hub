@@ -10,11 +10,8 @@ export class UsersService {
     return this.prisma.user.create({ data });
   }
 
-  findAll(filter?: string, page: number = 1) {
-     return this.prisma.user.findMany({
-      skip: (page - 1) * 5,
-      take: 5,
-    });
+  findAll() {
+     return this.prisma.user.findMany({});
   }
 
 

@@ -10,11 +10,8 @@ export class GamesService {
     return this.prisma.game.create({ data });
   }
 
-  findAll(filter?: string, page: number = 1) {
-      return this.prisma.game.findMany({
-      skip: (page - 1) * 5,
-      take: 5,
-    });
+  findAll() {
+      return this.prisma.game.findMany({});
   }
 
 
