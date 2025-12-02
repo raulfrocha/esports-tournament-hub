@@ -28,12 +28,12 @@ import { Public } from 'src/auth/public.decorator';
 @Controller({ path: 'games', version: '1' })
 @UseFilters(CustomHttpExceptionFilter)
 @UseInterceptors(ResponseInterceptor)
-@Roles(Role.ADMIN)
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class GamesController {
   constructor(private readonly gamesService: GamesService) {}
 
   @Post()
+  @Roles(Role.ADMIN)
   @HttpCode(201)
   @ApiOperation({ summary: 'Cria um novo jogo (Admin)' })
   @ApiResponse({ status: 201, description: 'Jogo criado.' })
@@ -58,6 +58,7 @@ export class GamesController {
   }
 
   @Patch(':id')
+  @Roles(Role.ADMIN)
   @ApiOperation({ summary: 'Atualiza parcialmente um jogo (Admin)' })
   partiaUpdate(
     @Param('id', ParseIntPipe) id: number,
@@ -68,6 +69,7 @@ export class GamesController {
 
   @Delete(':id')
   @HttpCode(204)
+  @Roles(Role.ADMIN)
   @ApiOperation({ summary: 'Deleta um jogo (Admin)' })
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.gamesService.remove(id);
